@@ -11,6 +11,10 @@ import { PanZoomComponent } from './pan-zoom/pan-zoom.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CameraButtonsComponent } from './camera-buttons/camera-buttons.component';
+import { CameraFeedComponent } from './camera-feed/camera-feed.component';
+import { GraspComponent } from './grasp/grasp.component';
+import { SelectComponent } from './grasp/select/select.component';
+import { ConfirmComponent } from './grasp/confirm/confirm.component';
 
 @NgModule({
   declarations: [
@@ -19,14 +23,18 @@ import { CameraButtonsComponent } from './camera-buttons/camera-buttons.componen
     CameraComponent,
     PanZoomComponent,
     ToolbarComponent,
-    CameraButtonsComponent
+    CameraButtonsComponent,
+    CameraFeedComponent,
+    GraspComponent,
+    SelectComponent,
+    ConfirmComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

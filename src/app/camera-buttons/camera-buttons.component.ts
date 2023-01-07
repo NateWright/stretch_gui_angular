@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { RosService } from '../ros.service';
 
 @Component({
   selector: 'app-camera-buttons',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./camera-buttons.component.css']
 })
 export class CameraButtonsComponent {
-
+  constructor(public rosService: RosService) { }
 }

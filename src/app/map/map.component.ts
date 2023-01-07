@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as ROSLIB from 'roslib';
 import { Subscription } from 'rxjs';
 import { RosService } from '../ros.service';
@@ -26,39 +26,55 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   robotPoseSub!: Subscription;
   robotPose: RobotPose = { rotation: 0, point: { x: 0, y: 0 } };
 
-  constructor(private renderer: Renderer2, private roslibService: RosService) { }
+  roslibSub!: Subscription;
+
+  constructor(private roslibService: RosService) { }
+
+  ngOnInit(): void {
+    this.roslibSub = this.roslibService.connected.subscribe(
+      (b: boolean) => {
+        if (b) {
+          this.roslibService.changeToNavigation();
+          this.robotImage.src = "./assets/stretch-pixel-art.png"
+          this.mapSub = this.roslibService.mapFeed.subscribe(
+            (msg: ROSLIB.Message) => {
+              // @ts-expect-error
+              if (!msg.data) {
+                this.mapImage.src = './assets/no-image.png'
+              } else {
+                // @ts-expect-error
+                this.mapImage.src = "data:image/jpg;base64," + msg.data
+              }
+              if (this.context) {
+                this.updateImage();
+              }
+            }
+          )
+          this.robotPoseSub = this.roslibService.robotPose.subscribe(
+            (msg: ROSLIB.Message) => {
+              // console.log(msg)
+              // @ts-expect-error
+              this.robotPose.rotation = msg.rotation
+              // @ts-expect-error
+              this.robotPose.point = msg.point
+              if (this.context) {
+                this.updateImage();
+              }
+            }
+          )
+        }
+      }
+    )
+  }
 
   ngAfterViewInit(): void {
     // @ts-expect-error
     this.context = this.map.nativeElement.getContext('2d')
   }
 
-  ngOnInit(): void {
-    this.robotImage.src = "./assets/stretch-pixel-art.png"
-    this.mapSub = this.roslibService.mapFeed.subscribe(
-      (msg: ROSLIB.Message) => {
-        // @ts-expect-error
-        this.mapImage.src = "data:image/jpg;base64," + msg.data
-        if (this.context) {
-          this.updateImage();
-        }
-      }
-    )
-    this.robotPoseSub = this.roslibService.robotPose.subscribe(
-      (msg: ROSLIB.Message) => {
-        // console.log(msg)
-        // @ts-expect-error
-        this.robotPose.rotation = msg.rotation
-        // @ts-expect-error
-        this.robotPose.point = msg.point
-        if (this.context) {
-          this.updateImage();
-        }
-      }
-    )
-  }
   ngOnDestroy(): void {
     this.mapSub.unsubscribe();
+    this.roslibSub.unsubscribe();
   }
 
   updateImage() {

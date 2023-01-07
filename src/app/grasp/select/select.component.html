@@ -1,4 +1,4 @@
 <div class="container flex flex-row justify-between m-auto items-center h-full">
-    <app-camera-feed class="m-2"></app-camera-feed>
+    <app-camera-feed class="m-2" (pointerEvent)="sceneClicked($event)"></app-camera-feed>
     <app-camera-buttons></app-camera-buttons>
 </div>
