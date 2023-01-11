@@ -1,15 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as ROSLIB from 'roslib';
+import { Subscription } from 'rxjs';
 import { RosService } from 'src/app/ros.service';
+import { GraspService } from '../grasp.service';
 
 @Component({
   selector: 'app-select',
   templateUrl: './select.component.html',
   styleUrls: ['./select.component.css']
 })
-export class SelectComponent {
+export class SelectComponent implements OnInit {
+  graspSub!: Subscription;
+  errorMsg = '';
 
-  constructor(private rosService: RosService) { }
+  constructor(private rosService: RosService, private graspService: GraspService) { }
+
+  ngOnInit(): void {
+    this.graspSub = this.graspService.errorMsg.subscribe(
+      (msg: string) => {
+        this.errorMsg = msg;
+      }
+    )
+  }
 
   sceneClicked(event: { event: PointerEvent, width: number, height: number }) {
     let msg = new ROSLIB.Message({
@@ -18,7 +30,6 @@ export class SelectComponent {
       width: event.width,
       height: event.height
     })
-    console.log(msg);
     this.rosService.pointClicked.publish(msg)
   }
 }

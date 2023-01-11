@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectComponent } from './select.component';
+import { TeleopControlComponent } from './teleop-control.component';
 
-describe('SelectComponent', () => {
-  let component: SelectComponent;
-  let fixture: ComponentFixture<SelectComponent>;
+describe('TeleopControlComponent', () => {
+  let component: TeleopControlComponent;
+  let fixture: ComponentFixture<TeleopControlComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectComponent ]
+      declarations: [ TeleopControlComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SelectComponent);
+    fixture = TestBed.createComponent(TeleopControlComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

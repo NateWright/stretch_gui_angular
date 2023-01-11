@@ -3,19 +3,22 @@ import { Subscription } from 'rxjs';
 import { RosService } from '../ros.service';
 
 @Component({
-  selector: 'app-toolbar',
-  templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.css']
+  selector: 'app-teleop-control',
+  templateUrl: './teleop-control.component.html',
+  styleUrls: ['./teleop-control.component.css']
 })
-export class ToolbarComponent implements OnInit, OnDestroy {
+export class TeleopControlComponent implements OnInit, OnDestroy {
   rosServiceSub!: Subscription;
-  canNavigate!: Subscription;
-  disableBtn = false;
+
+  headCameraSub!: Subscription;
+  headCameraSource = ''
+
+
   constructor(private rosService: RosService) { }
   ngOnInit(): void {
     this.rosServiceSub = this.rosService.connected.subscribe(
-      (value) => {
-        if (value) {
+      (val: boolean) => {
+        if (val) {
           this.initConnections();
         }
       }
@@ -23,15 +26,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     this.rosServiceSub.unsubscribe();
-    this.canNavigate.unsubscribe();
   }
 
   initConnections() {
-    this.canNavigate = this.rosService.canNavigate.subscribe(
-      (value) => {
-        this.disableBtn = !value
+    this.headCameraSub = this.rosService.headCameraFeed.subscribe(
+      (data: string) => {
+        this.headCameraSource = data;
       }
     )
   }
-
 }

@@ -10,11 +10,14 @@ import { CameraComponent } from './camera/camera.component';
 import { PanZoomComponent } from './pan-zoom/pan-zoom.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CameraButtonsComponent } from './camera-buttons/camera-buttons.component';
-import { CameraFeedComponent } from './camera-feed/camera-feed.component';
+import { CameraButtonsComponent } from './camera/camera-buttons/camera-buttons.component';
+import { CameraFeedComponent } from './camera/camera-feed/camera-feed.component';
 import { GraspComponent } from './grasp/grasp.component';
 import { SelectComponent } from './grasp/select/select.component';
 import { ConfirmComponent } from './grasp/confirm/confirm.component';
+import { GraspingComponent } from './grasp/grasping/grasping.component';
+import { TeleopControlComponent } from './teleop-control/teleop-control.component';
+import { ContainerComponent } from './container/container.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { ConfirmComponent } from './grasp/confirm/confirm.component';
     CameraFeedComponent,
     GraspComponent,
     SelectComponent,
-    ConfirmComponent
+    ConfirmComponent,
+    GraspingComponent,
+    TeleopControlComponent,
+    ContainerComponent,
   ],
   imports: [
     BrowserModule,

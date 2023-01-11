@@ -1,14 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { RosService } from '../ros.service';
+import { GraspService } from './grasp.service';
 
 @Component({
   selector: 'app-grasp',
-  templateUrl: './grasp.component.html',
+  template: `
+    <router-outlet></router-outlet>
+  `,
   styleUrls: ['./grasp.component.css']
 })
-export class GraspComponent implements OnInit {
-  constructor(private rosService: RosService, private router: Router, private activatedRoute: ActivatedRoute) {
+export class GraspComponent implements OnInit, OnDestroy {
+  rosServiceSub!: Subscription;
+  errorMsg = ''
+  constructor(private rosService: RosService, private graspService: GraspService, private router: Router, private activatedRoute: ActivatedRoute) {
+  }
+  ngOnDestroy(): void {
+    this.rosServiceSub.unsubscribe();
   }
   ngOnInit(): void {
     this.rosService.connected.subscribe(
@@ -22,14 +31,21 @@ export class GraspComponent implements OnInit {
 
 
   initSubscriptions() {
-    this.rosService.clickStatus.subscribe(
+    this.rosServiceSub = this.rosService.clickStatus.subscribe(
       (msg) => {
         //@ts-expect-error
         if (msg.success) {
           this.router.navigate(['confirm'], { relativeTo: this.activatedRoute })
-          console.log('success')
+        } else {
+          //@ts-expect-error
+          this.graspService.errorMsg.next(msg.msg);
         }
       }
     )
+    console.log(this.rosService.canNavigate.value)
+    if (this.rosService.canNavigate.value == false || this.rosService.hasObject.value) {
+      this.router.navigate(['grasping'], { relativeTo: this.activatedRoute })
+    }
+    console.log('done')
   }
 }

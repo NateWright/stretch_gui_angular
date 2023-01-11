@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RosService } from '../ros.service';
+import { RosService } from '../../ros.service';
 
 @Component({
   selector: 'app-camera-buttons',

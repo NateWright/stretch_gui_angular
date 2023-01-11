@@ -1,0 +1,20 @@
+<div class="container flex flex-row justify-between m-auto items-center h-full">
+    <app-camera-feed class="m-2"></app-camera-feed>
+    <div class="flex flex-col">
+        <div class="grid grid-cols-2 grid-rows-2 gap-1 mb-1">
+            <button mat-raised-button color="success" class="btn" [disabled]="!hasObject || disableButtons"
+                (click)="onReplaceObject()">
+                REPLACE<br>OBJECT
+            </button>
+            <button mat-raised-button color="success" class="btn" [disabled]="hasObject || disableButtons"
+                (click)="onStowObject()">STOW<br>OBJECT</button>
+            <button mat-raised-button color="success" class="btn" [disabled]="!hasObject || disableButtons"
+                (click)="onReleaseObject()">
+                RELEASE<br>OBJECT
+            </button>
+            <div></div>
+        </div>
+        <button mat-raised-button color="back" class="!h-24" (click)="onBack()"
+            [disabled]="disableButtons">BACK</button>
+    </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RosService } from '../ros.service';
+import { RosService } from '../../ros.service';
 
 @Component({
   selector: 'app-camera-feed',

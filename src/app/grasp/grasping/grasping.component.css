@@ -1,0 +1,11 @@
+.mat-success {
+    @apply bg-green-600;
+}
+
+.mat-back {
+    @apply bg-red-600;
+}
+
+.btn {
+    @apply !h-28 !w-28;
+}

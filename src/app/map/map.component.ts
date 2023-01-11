@@ -26,42 +26,17 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   robotPoseSub!: Subscription;
   robotPose: RobotPose = { rotation: 0, point: { x: 0, y: 0 } };
 
-  roslibSub!: Subscription;
+  rosServiceSub!: Subscription;
 
-  constructor(private roslibService: RosService) { }
+  hasHome = false;
+
+  constructor(private rosService: RosService) { }
 
   ngOnInit(): void {
-    this.roslibSub = this.roslibService.connected.subscribe(
+    this.rosServiceSub = this.rosService.connected.subscribe(
       (b: boolean) => {
         if (b) {
-          this.roslibService.changeToNavigation();
-          this.robotImage.src = "./assets/stretch-pixel-art.png"
-          this.mapSub = this.roslibService.mapFeed.subscribe(
-            (msg: ROSLIB.Message) => {
-              // @ts-expect-error
-              if (!msg.data) {
-                this.mapImage.src = './assets/no-image.png'
-              } else {
-                // @ts-expect-error
-                this.mapImage.src = "data:image/jpg;base64," + msg.data
-              }
-              if (this.context) {
-                this.updateImage();
-              }
-            }
-          )
-          this.robotPoseSub = this.roslibService.robotPose.subscribe(
-            (msg: ROSLIB.Message) => {
-              // console.log(msg)
-              // @ts-expect-error
-              this.robotPose.rotation = msg.rotation
-              // @ts-expect-error
-              this.robotPose.point = msg.point
-              if (this.context) {
-                this.updateImage();
-              }
-            }
-          )
+          this.initConnections();
         }
       }
     )
@@ -74,7 +49,42 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.mapSub.unsubscribe();
-    this.roslibSub.unsubscribe();
+    this.robotPoseSub.unsubscribe();
+    this.rosServiceSub.unsubscribe();
+  }
+
+  initConnections() {
+    this.rosService.changeToNavigation();
+    this.robotImage.src = "./assets/stretch-pixel-art.png"
+    this.mapSub = this.rosService.mapFeed.subscribe(
+      (msg: ROSLIB.Message) => {
+        // @ts-expect-error
+        if (!msg.data) {
+          this.mapImage.src = './assets/no-image.png'
+        } else {
+          // @ts-expect-error
+          this.mapImage.src = "data:image/jpg;base64," + msg.data
+        }
+        if (this.context) {
+          this.updateImage();
+        }
+      }
+    )
+    this.robotPoseSub = this.rosService.robotPose.subscribe(
+      (msg: ROSLIB.Message) => {
+        // console.log(msg)
+        // @ts-expect-error
+        this.robotPose.rotation = msg.rotation
+        // @ts-expect-error
+        this.robotPose.point = msg.point
+        if (this.context) {
+          this.updateImage();
+        }
+      }
+    )
+    this.rosService.hasHome.get((b: boolean) => {
+      this.hasHome = b;
+    });
   }
 
   updateImage() {
@@ -97,5 +107,16 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
       imageWidth,
       imageHeight)
     this.context.restore();
+  }
+  onSetHome() {
+    this.rosService.setHome();
+    this.hasHome = true;
+  }
+  onNavigateHome() {
+    this.rosService.disableButtons.next(true)
+    let request = new ROSLIB.ServiceRequest({});
+    this.rosService.navigateHomeClient.callService(request, () => {
+      this.rosService.disableButtons.next(false)
+    })
   }
 }

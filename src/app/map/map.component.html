@@ -7,6 +7,6 @@
         <div class="col-span-2">warning</div>
         <button mat-raised-button class="col-span-2" color="warn">STOP</button>
         <button mat-raised-button color="accent">Set Home</button>
-        <button mat-raised-button color="accent" [disabled]="true">Go Home</button>
+        <button mat-raised-button color="accent" [disabled]="!hasHome">Go Home</button>
     </div>
 </div>
