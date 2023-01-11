@@ -1,3 +1,25 @@
 <app-container>
-    <img src="{{ headCameraSource }}" alt="" class="max-h-full">
+    <canvas #canvas class="aspect-square h-full" (pointerdown)="clickHandler($event)" (pointerup)="reset()"
+        (pointerleave)="reset()" (contextmenu)="disableContext()"></canvas>
+
+    <mat-card class="w-1/3">
+        <mat-card-content>
+            <h2>Adjustments</h2>
+
+            <div class="flex flex-row justify-between">
+                <label>Angular Speed</label>
+                <label>{{angularSpeed}}</label>
+            </div>
+            <mat-slider [max]="angularMaxSpeed" [min]="angularMinSpeed" [step]="0.05">
+                <input matSliderThumb [(ngModel)]="angularSpeed">
+            </mat-slider>
+            <div class="flex flex-row justify-between">
+                <label>Linear Speed</label>
+                <label>{{linearSpeed}}</label>
+            </div>
+            <mat-slider [max]="linearMaxSpeed" [min]="linearMinSpeed" [step]="0.05">
+                <input matSliderThumb [(ngModel)]="linearSpeed">
+            </mat-slider>
+        </mat-card-content>
+    </mat-card>
 </app-container>

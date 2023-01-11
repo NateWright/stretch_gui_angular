@@ -14,6 +14,7 @@ export class RosService {
   //Publishers
   pointClicked!: ROSLIB.Topic;
   lineUpClicked!: ROSLIB.Topic;
+  cmdVel!: ROSLIB.Topic;
 
   // Subscribers
   private cameraTopic!: ROSLIB.Topic;
@@ -53,6 +54,7 @@ export class RosService {
   // Parameters
   objectOrientation!: ROSLIB.Param;
   hasHome!: ROSLIB.Param;
+  private cmdVelParam!: ROSLIB.Param;
 
 
   constructor(private router: Router) {
@@ -68,11 +70,32 @@ export class RosService {
   private subscribeToTopics() {
     console.log("Starting connections")
 
+    // Parameters
+    this.objectOrientation = new ROSLIB.Param({
+      ros: this.ros,
+      name: '/stretch_gui/object_orientation'
+    })
+    this.hasHome = new ROSLIB.Param({
+      ros: this.ros,
+      name: '/stretch_gui/has_home'
+    })
+
+    this.cmdVelParam = new ROSLIB.Param({
+      ros: this.ros,
+      name: '/stretch_gui/cmd_vel'
+    })
+
     // Publishers
     this.pointClicked = new ROSLIB.Topic({ ros: this.ros, name: '/stretch_gui/scene_clicked', messageType: 'stretch_gui_library/PointClicked' })
     this.pointClicked.advertise();
     this.lineUpClicked = new ROSLIB.Topic({ ros: this.ros, name: '/stretch_gui/grasp', messageType: 'std_msgs/Empty' })
     this.lineUpClicked.advertise();
+    this.cmdVelParam.get(
+      (msg: string) => {
+        this.cmdVel = new ROSLIB.Topic({ ros: this.ros, name: msg, messageType: 'geometry_msgs/Twist' })
+        this.cmdVel.advertise();
+      }
+    )
 
     // Subscribers
     this.cameraTopic = new ROSLIB.Topic({ ros: this.ros, name: '/camera/color/image_raw/compressed', messageType: 'sensor_msgs/CompressedImage' })
@@ -198,16 +221,6 @@ export class RosService {
       ros: this.ros,
       name: '/stretch_gui/navigate_home',
       serviceType: 'std_srvs/Empty'
-    })
-
-    // Parameters
-    this.objectOrientation = new ROSLIB.Param({
-      ros: this.ros,
-      name: '/stretch_gui/object_orientation'
-    })
-    this.hasHome = new ROSLIB.Param({
-      ros: this.ros,
-      name: '/stretch_gui/has_home'
     })
 
     if (this.canNavigate.value == false) {
