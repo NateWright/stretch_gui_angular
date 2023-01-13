@@ -42,10 +42,8 @@ export class GraspComponent implements OnInit, OnDestroy {
         }
       }
     )
-    console.log(this.rosService.canNavigate.value)
     if (this.rosService.canNavigate.value == false || this.rosService.hasObject.value) {
       this.router.navigate(['grasping'], { relativeTo: this.activatedRoute })
     }
-    console.log('done')
   }
 }
