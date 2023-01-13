@@ -9,7 +9,7 @@ import { RosService } from '../ros.service';
   styleUrls: ['./teleop-control.component.css']
 })
 export class TeleopControlComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   context!: CanvasRenderingContext2D;
   triangleUp = new Path2D();
   triangleDown = new Path2D();
@@ -43,9 +43,10 @@ export class TeleopControlComponent implements OnInit, OnDestroy, AfterViewInit 
   }
   ngOnDestroy(): void {
     this.rosServiceSub.unsubscribe();
+    this.headCameraSub.unsubscribe();
   }
   ngAfterViewInit(): void {
-    this.context = this.renderer.selectRootElement(this.canvas).nativeElement.getContext('2d')
+    this.context = this.renderer.selectRootElement(this.canvas).nativeElement.getContext('2d');
     this.createTriangles();
   }
 
@@ -53,7 +54,10 @@ export class TeleopControlComponent implements OnInit, OnDestroy, AfterViewInit 
     this.headCameraSub = this.rosService.headCameraFeed.subscribe(
       (data: string) => {
         this.headCameraImage.src = data;
-        this.paint();
+        this.headCameraImage.onload =
+          (event) => {
+            this.paint();
+          }
       }
     )
   }
@@ -124,7 +128,6 @@ export class TeleopControlComponent implements OnInit, OnDestroy, AfterViewInit 
     this.moveSub = timer(0, 200).subscribe(
       () => {
         this.rosService.cmdVel.publish(new ROSLIB.Message(msg));
-        console.log('fired')
       }
     )
   }
