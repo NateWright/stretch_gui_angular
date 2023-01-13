@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as ROSLIB from 'roslib';
 import { Subject, BehaviorSubject } from 'rxjs';
@@ -57,9 +58,9 @@ export class RosService {
   private cmdVelParam!: ROSLIB.Param;
 
 
-  constructor(private router: Router) {
+  constructor(private router: Router, @Inject(DOCUMENT) private document: any) {
     this.ros = new ROSLIB.Ros({});
-    this.ros.connect('ws://127.0.0.1:9090');
+    this.ros.connect('ws://' + this.document.location.hostname + ':9090');
     this.ros.on('connection', (event: any) => {
       this.subscribeToTopics();
       this.connected.next(true);
