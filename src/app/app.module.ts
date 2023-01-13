@@ -22,6 +22,7 @@ import { GraspingComponent } from './grasp/grasping/grasping.component';
 import { TeleopControlComponent } from './teleop-control/teleop-control.component';
 import { ContainerComponent } from './container/container.component';
 import { FormsModule } from '@angular/forms';
+import { ToolbarBtnComponent } from './toolbar/toolbar-btn/toolbar-btn.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { FormsModule } from '@angular/forms';
     GraspingComponent,
     TeleopControlComponent,
     ContainerComponent,
+    ToolbarBtnComponent,
   ],
   imports: [
     BrowserModule,

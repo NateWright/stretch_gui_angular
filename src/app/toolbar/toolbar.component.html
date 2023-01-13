@@ -1,9 +1,7 @@
 <mat-toolbar>
     <span class="m-1">Stretch GUI</span>
-    <button mat-raised-button class="m-1" routerLink="/camera" routerLinkActive=""
-        [color]="rla1.isActive ? 'primary' : 'none'" #rla1="routerLinkActive">Camera</button>
-    <button mat-raised-button class="m-1" routerLink="/map" routerLinkActive=""
-        [color]="rla2.isActive ? 'primary' : 'none'" #rla2="routerLinkActive" [disabled]="disableBtn">Map</button>
-    <button mat-raised-button class="m-1" routerLink="/grasp" routerLinkActive=""
-        [color]="rla3.isActive ? 'primary' : 'none'" #rla3="routerLinkActive">Grasp</button>
+    <app-toolbar-btn link="/camera">Camera</app-toolbar-btn>
+    <app-toolbar-btn link="/map">Map</app-toolbar-btn>
+    <app-toolbar-btn link="/teleop">Teleop</app-toolbar-btn>
+    <app-toolbar-btn link="/grasp">Grasp</app-toolbar-btn>
 </mat-toolbar>
