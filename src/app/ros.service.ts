@@ -4,6 +4,14 @@ import { Router } from '@angular/router';
 import * as ROSLIB from 'roslib';
 import { Subject, BehaviorSubject } from 'rxjs';
 
+export interface RobotPose {
+  rotation: number,
+  point: {
+    x: number,
+    y: number
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +35,7 @@ export class RosService {
   private mapTopic!: ROSLIB.Topic;
   mapFeed = new BehaviorSubject<ROSLIB.Message>(new ROSLIB.Message(0));
   private robotPoseTopic!: ROSLIB.Topic;
-  robotPose = new Subject<ROSLIB.Message>();
+  robotPose = new Subject<RobotPose>();
   private clickStatusTopic!: ROSLIB.Topic;
   clickStatus = new Subject<ROSLIB.Message>();
   private canNavigateTopic!: ROSLIB.Topic;
@@ -126,7 +134,8 @@ export class RosService {
     )
     this.robotPoseTopic = new ROSLIB.Topic({ ros: this.ros, name: '/stretch_gui/pose', messageType: 'stretch_gui_library/MapPose' })
     this.robotPoseTopic.subscribe(
-      (msg) => {
+      // @ts-expect-error
+      (msg: RobotPose) => {
         this.robotPose.next(msg);
       }
     )

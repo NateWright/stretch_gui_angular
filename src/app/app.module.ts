@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +23,9 @@ import { TeleopControlComponent } from './teleop-control/teleop-control.componen
 import { ContainerComponent } from './container/container.component';
 import { FormsModule } from '@angular/forms';
 import { ToolbarBtnComponent } from './toolbar/toolbar-btn/toolbar-btn.component';
+import { InteractiveMapComponent } from './map/interactive-map/interactive-map.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { HammerModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,7 @@ import { ToolbarBtnComponent } from './toolbar/toolbar-btn/toolbar-btn.component
     TeleopControlComponent,
     ContainerComponent,
     ToolbarBtnComponent,
+    InteractiveMapComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,7 +53,14 @@ import { ToolbarBtnComponent } from './toolbar/toolbar-btn/toolbar-btn.component
     MatToolbarModule,
     MatButtonModule,
     MatCardModule,
-    MatSliderModule
+    MatSliderModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
+    HammerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

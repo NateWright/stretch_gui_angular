@@ -47,6 +47,8 @@ export class TeleopControlComponent implements OnInit, OnDestroy, AfterViewInit 
   }
   ngAfterViewInit(): void {
     this.context = this.renderer.selectRootElement(this.canvas).nativeElement.getContext('2d');
+    this.context.canvas.width = this.canvas.nativeElement.offsetWidth;
+    this.context.canvas.height = this.canvas.nativeElement.offsetHeight;
     this.createTriangles();
   }
 
@@ -120,9 +122,9 @@ export class TeleopControlComponent implements OnInit, OnDestroy, AfterViewInit 
     } else if (this.context.isPointInPath(this.triangleDown, event.offsetX, event.offsetY)) {
       msg.linear.x = -this.linearSpeed;
     } else if (this.context.isPointInPath(this.triangleLeft, event.offsetX, event.offsetY)) {
-      msg.angular.z = -this.angularSpeed;
-    } else if (this.context.isPointInPath(this.triangleRight, event.offsetX, event.offsetY)) {
       msg.angular.z = this.angularSpeed;
+    } else if (this.context.isPointInPath(this.triangleRight, event.offsetX, event.offsetY)) {
+      msg.angular.z = -this.angularSpeed;
     }
 
     this.moveSub = timer(0, 200).subscribe(
